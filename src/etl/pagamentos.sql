@@ -1,19 +1,3 @@
--- Databricks notebook source
-SELECT 
-    DISTINCT
-    t1.idPedido,
-    t2.idVendedor
-
-FROM  silver.olist.pedido AS t1
-
-LEFT JOIN silver.olist.item_pedido as t2 
-on t1.idPedido = t2.idPedido
-
-WHERE dtPedido < '2018-01-01'
-AND dtPedido >= add_months('2018-01-01', -6)
-
--- COMMAND ----------
-
 WITH tb_pedido AS (
 
   SELECT 
@@ -26,8 +10,8 @@ FROM  silver.olist.pedido AS t1
 LEFT JOIN silver.olist.item_pedido as t2 
 on t1.idPedido = t2.idPedido
 
-WHERE dtPedido < '2018-01-01'
-AND dtPedido >= add_months('2018-01-01', -6)
+WHERE dtPedido < '{date}'
+AND dtPedido >= add_months('{date}', -6)
 AND idVendedor IS NOT NULL
 
 ),
@@ -107,7 +91,8 @@ tb_cartao as (
 )
 
 SELECT 
-      '2018-01-01' AS dtReference,
+      '{date}' AS dtReference,
+      NOW() AS dtIngestion,
       t1.*,
       t2.avgQtdeParcelas,
       t2.medianQtdeParcelas,
